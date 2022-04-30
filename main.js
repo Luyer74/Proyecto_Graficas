@@ -18,17 +18,25 @@ const scene = new THREE.Scene();
 // Mesh
 
 // Lights
-
 const pointLight = new THREE.PointLight(0xffffff, 0.8);
 pointLight.position.x = 2;
 pointLight.position.y = 3;
 pointLight.position.z = 4;
 scene.add(pointLight);
 
-// const pointLight2 = new THREE.PointLight(0xff0000, 0.2);
-// pointLight2.position.set(1, 1, 1);
-// pointLight2.intensity = 1;
-// scene.add(pointLight2);
+const hlight = new THREE.AmbientLight (0x404040, 4);
+hlight.position.set(0,10,-50);
+scene.add(hlight);
+
+const alight = new THREE.PointLight (0xc4c4c4, 0.3);
+alight.position.set(0, 300, -500);
+scene.add(alight);
+
+const light2 = new THREE.PointLight (0xc4c4c4, 0.1);
+light2.position.set(50 , 10, 0);
+scene.add(light2);
+
+
 
 /**
  * Sizes
@@ -68,8 +76,9 @@ camera.position.z = 2;
 scene.add(camera);
 
 // Controls
-// const controls = new OrbitControls(camera, canvas)
-// controls.enableDamping = true
+const controls = new OrbitControls(camera, canvas)
+controls.enableDamping = true
+
 
 /**
  * Renderer
@@ -109,6 +118,7 @@ loader.load(
     scene.add(gltf.scene);
     gltf.scene.scale.set(0.4, 0.4, 0.4);
     tick();
+    // mylight();
   },
   undefined,
   function (error) {
