@@ -1,9 +1,20 @@
 import "./style.css";
-
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import * as THREE from "three";
 
 const scene = new THREE.Scene();
+const loader = new GLTFLoader();
 
+loader.load(
+  "scene.gltf",
+  function (gltf) {
+    scene.add(gltf.scene);
+  },
+  undefined,
+  function (error) {
+    console.error(error);
+  }
+);
 const camera = new THREE.PerspectiveCamera(
   75,
   window.innerWidth / window.innerHeight,
