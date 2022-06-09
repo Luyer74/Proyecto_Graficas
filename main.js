@@ -14,9 +14,17 @@ const scene = new THREE.Scene();
 // Objects
 
 // Materials
+const texture = new THREE.TextureLoader().load("assets/grass.jpeg");
 
+// immediately use the texture for material creation
+const material = new THREE.MeshBasicMaterial({ map: texture });
 // Mesh
-
+const geometry = new THREE.PlaneGeometry(3, 3);
+const plane = new THREE.Mesh(geometry, material);
+scene.add(plane);
+plane.rotation.x = Math.PI / 2;
+plane.rotation.y = Math.PI;
+plane.rotation.z = 0;
 // Lights
 const pointLight = new THREE.PointLight(0xffffff, 0.8);
 pointLight.position.x = 2;
@@ -24,19 +32,17 @@ pointLight.position.y = 3;
 pointLight.position.z = 4;
 scene.add(pointLight);
 
-const hlight = new THREE.AmbientLight (0x404040, 4);
-hlight.position.set(0,10,-50);
+const hlight = new THREE.AmbientLight(0x404040, 4);
+hlight.position.set(0, 10, -50);
 scene.add(hlight);
 
-const alight = new THREE.PointLight (0xc4c4c4, 0.3);
+const alight = new THREE.PointLight(0xc4c4c4, 0.3);
 alight.position.set(0, 300, -500);
 scene.add(alight);
 
-const light2 = new THREE.PointLight (0xc4c4c4, 0.1);
-light2.position.set(50 , 10, 0);
+const light2 = new THREE.PointLight(0xc4c4c4, 0.1);
+light2.position.set(50, 10, 0);
 scene.add(light2);
-
-
 
 /**
  * Sizes
@@ -71,14 +77,13 @@ const camera = new THREE.PerspectiveCamera(
   100
 );
 camera.position.x = 0;
-camera.position.y = 0;
+camera.position.y = 1.2;
 camera.position.z = 2;
 scene.add(camera);
 
 // Controls
-const controls = new OrbitControls(camera, canvas)
-controls.enableDamping = true
-
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
 
 /**
  * Renderer
