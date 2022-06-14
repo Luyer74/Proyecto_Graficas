@@ -165,7 +165,12 @@ window.addEventListener("keyup", function (event) {
 function init() {
   // Base scene
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xa8def0);
+  // scene.background = new THREE.Color(0xa8def0);
+
+  const materialArray = createMaterialArray("Daylight");
+  const skyboxGeo = new THREE.BoxGeometry(50, 50, 50);
+  const skybox = new THREE.Mesh(skyboxGeo, materialArray);
+  scene.add(skybox);
 
   // Base camera
   camera = new THREE.PerspectiveCamera(
@@ -174,7 +179,7 @@ function init() {
     0.1,
     100
   );
-  camera.position.set(5, 3, 2);
+  camera.position.set(0, 10, 30);
   scene.add(camera);
 
   // lights
@@ -247,6 +252,9 @@ function init() {
   plane.rotation.x = Math.PI / 2;
   plane.rotation.y = Math.PI;
   plane.rotation.z = 0;
+
+  //Create the trees
+  placeTrees(scene);
 }
 
 // Animate
@@ -262,4 +270,74 @@ function animate() {
   if (moving) {
     char_controls.Update(delta * 0.2);
   }
+}
+
+function createTree(){
+  // Trunk texture
+  const texture = new THREE.TextureLoader().load("assets/trunk.jpeg");
+  const materialT = new THREE.MeshBasicMaterial({ map: texture });
+
+  // Leaves texture
+  const texture2 = new THREE.TextureLoader().load("assets/leaves.jpeg");
+  const materialL = new THREE.MeshBasicMaterial({ map: texture2 });
+
+  const group = new THREE.Group()
+  const level1 = new THREE.Mesh(
+    new THREE.ConeGeometry(3,3),
+    materialL
+  )
+  level1.position.y = 7.5
+  group.add(level1)
+  const level2 = new THREE.Mesh(
+      new THREE.ConeGeometry(3.5,3),
+      materialL  )
+  level2.position.y = 5.5
+  group.add(level2)
+  const level3 = new THREE.Mesh(
+      new THREE.ConeGeometry(4.5,3),
+      materialL  )
+  level3.position.y = 3.5
+  group.add(level3)
+  const trunk = new THREE.Mesh(
+      new THREE.CylinderGeometry(1,1,3),
+      materialT
+  )
+  trunk.position.y = 1.5
+  group.add(trunk)
+  return group;
+}
+
+function placeTrees (scene) {
+  let pos = -10;
+  for (let i = 0; i < 3; i++, pos+=10){
+    const newTree=createTree();
+    scene.add(newTree);
+    newTree.position.x = 8;
+    newTree.position.z = pos;
+    const newTree2=createTree();
+    scene.add(newTree2);
+    newTree2.position.x = -8;
+    newTree2.position.z = pos;
+  }
+}
+
+function createPathStrings(filename) {
+  const basePath = "./assets/skybox/";
+  const baseFilename = basePath + filename;
+  const fileType = ".bmp";
+  const sides = ["ft", "bk", "up", "dn", "rt", "lf"];
+  const pathStings = sides.map(side => {
+    return baseFilename + "_" + side + fileType;
+  });
+  return pathStings;
+}
+
+function createMaterialArray(filename) {
+  const skyboxImagepaths = createPathStrings(filename);
+  const materialArray = skyboxImagepaths.map(image => {
+    let texture = new THREE.TextureLoader().load(image);
+
+    return new THREE.MeshBasicMaterial({ map: texture, side: THREE.BackSide });
+  });
+  return materialArray;
 }
