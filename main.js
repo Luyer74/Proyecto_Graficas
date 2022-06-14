@@ -3,6 +3,8 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
+let starGeo, stars
+
 //controller class
 class BasicCharacterControls {
   constructor(params) {
@@ -165,7 +167,7 @@ window.addEventListener("keyup", function (event) {
 function init() {
   // Base scene
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xa8def0);
+  scene.background = new THREE.Color("rgb(0, 0, 0)");
 
   // Base camera
   camera = new THREE.PerspectiveCamera(
@@ -181,7 +183,13 @@ function init() {
   const hlight = new THREE.AmbientLight(0xffffff, 2);
   hlight.position.set(0, 10, -50);
   scene.add(hlight);
-
+  // Shadow
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+  directionalLight.position.x += 20
+  directionalLight.position.y += 20
+  directionalLight.position.z += 20
+  directionalLight.castingShadow = true;
+  scene.add(directionalLight);
   // Clock
   clock = new THREE.Clock();
 
@@ -216,6 +224,28 @@ function init() {
 
   renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.shadowMap.enabled = true;
+
+  starGeo = new THREE.BufferGeometry();
+  for ( let i = 0 ; i < 6000; i++){
+    let star = new THREE.Vector3(
+      Math.random() * 600 - 300,
+      Math.random() * 600 - 300,
+      Math.random() * 600 - 300
+    );
+    // starGeo.vertices.push(star);
+  }
+  // let sprite = new THREE.TextureLoader().load("./asstes/star.png")
+  // let starMaterial = new THREE.PointsMaterial({
+  //   color: 0xaaaaaa,
+  //   size: 0.7,
+  //   map:sprite
+  // })
+
+  // stars = new THREE.Points(starGeo,starMaterial);
+  // scene.add(stars);
+  // animate();
+
 
   window.addEventListener("resize", () => {
     // Update sizes
@@ -233,7 +263,7 @@ function init() {
 
   // Controls
   controls = new OrbitControls(camera, canvas);
-  controls.enableDamping = true;
+  controls.addEventListener('change',renderer)
 
   // Grass
   const texture = new THREE.TextureLoader().load("assets/grass.jpeg");
@@ -241,23 +271,92 @@ function init() {
   // immediately use the texture for material creation
   const material = new THREE.MeshBasicMaterial({ map: texture });
   // Mesh
-  const geometry = new THREE.PlaneGeometry(30, 30);
+  const geometry = new THREE.PlaneGeometry(35, 35);
   const plane = new THREE.Mesh(geometry, material);
   scene.add(plane);
   plane.rotation.x = Math.PI / 2;
   plane.rotation.y = Math.PI;
   plane.rotation.z = 0;
+
+  // cerca
+  const cerca  = new GLTFLoader();
+  cerca.load("./assets/cerca/cerca.gltf", function (some) {
+    const params = {
+      target: some.scene,
+      camera: camera,
+    };
+    char_controls = new BasicCharacterControls(params);
+    scene.add(some.scene);
+    mixer = new THREE.AnimationMixer(some.scene);
+    actions = [];
+    const idle_action = mixer.clipAction(some.animations[0]);
+    const moving_action = mixer.clipAction(some.animations[1]);
+    actions = [idle_action, moving_action];
+    if (moving) {
+      moving_action.play();
+    } else {
+      idle_action.play();
+    }
+    animate();
+  });
+
+   // barn
+   // https://sketchfab.com/3d-models/farm-barn-b930b48e99934f698c52b92f4ec1e51a
+   const barn  = new GLTFLoader();
+   barn.load("./assets/barn/barn.gltf", function (mybarn) {
+     const params = {
+       target: mybarn.scene,
+       camera: camera,
+     };
+     char_controls = new BasicCharacterControls(params);
+     scene.add(mybarn.scene);
+     mixer = new THREE.AnimationMixer(mybarn.scene);
+     actions = [];
+     const idle_action = mixer.clipAction(mybarn.animations[0]);
+     const moving_action = mixer.clipAction(mybarn.animations[1]);
+     actions = [idle_action, moving_action];
+     if (moving) {
+       moving_action.play();
+     } else {
+       idle_action.play();
+     }
+     animate();
+   });
+   let materialArray = [];
+   let texture_ft = new THREE.TextureLoader().load('./assets/newsky/penguins (2)/arid2_ft.jpg')
+   let texture_bk = new THREE.TextureLoader().load('./assets/newsky/penguins (2)/arid2_bk.jpg')
+   let texture_up = new THREE.TextureLoader().load('./assets/newsky/penguins (2)/arid2_up.jpg')
+   let texture_dn = new THREE.TextureLoader().load('./assets/newsky/penguins (2)/arid2_dn.jpg')
+   let texture_rt = new THREE.TextureLoader().load('./assets/newsky/penguins (2)/arid2_rt.jpg')
+   let texture_lf = new THREE.TextureLoader().load('./assets/newsky/penguins (2)/arid2_lf.jpg')
+   
+   materialArray.push( new THREE.MeshBasicMaterial({map: texture_ft}));
+   materialArray.push( new THREE.MeshBasicMaterial({map: texture_bk}));
+   materialArray.push( new THREE.MeshBasicMaterial({map: texture_up}));
+   materialArray.push( new THREE.MeshBasicMaterial({map: texture_dn}));
+   materialArray.push( new THREE.MeshBasicMaterial({map: texture_rt}));
+   materialArray.push( new THREE.MeshBasicMaterial({map: texture_lf}));
+   
+   for (let i = 0 ; i < 6 ; i ++){
+     materialArray[i].side = THREE.BackSide; 
+   }
+
+   let skyboxGeo = new THREE.BoxGeometry(10000,10000,10000);
+   let skybox = new THREE.Mesh(skyboxGeo, materialArray);
+   scene.add(skybox);
+   animate();
 }
+
 
 // Animate
 function animate() {
-  requestAnimationFrame(animate);
-
+  
   var delta = clock.getDelta();
-
+  
   if (mixer) mixer.update(delta);
-
+  
   renderer.render(scene, camera);
+  requestAnimationFrame(animate);
 
   if (moving) {
     char_controls.Update(delta * 0.2);
