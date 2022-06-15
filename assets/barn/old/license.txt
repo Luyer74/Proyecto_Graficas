@@ -1,0 +1,11 @@
+Model Information:
+* title:	Farm Barn
+* source:	https://sketchfab.com/3d-models/farm-barn-b930b48e99934f698c52b92f4ec1e51a
+* author:	Jeff Harper Games (https://sketchfab.com/jeffharpergames)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Farm Barn" (https://sketchfab.com/3d-models/farm-barn-b930b48e99934f698c52b92f4ec1e51a) by Jeff Harper Games (https://sketchfab.com/jeffharpergames) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

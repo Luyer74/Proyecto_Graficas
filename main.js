@@ -3,6 +3,8 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
+let starGeo, stars;
+
 //controller class
 class BasicCharacterControls {
   constructor(params) {
@@ -186,7 +188,13 @@ function init() {
   const hlight = new THREE.AmbientLight(0xffffff, 2);
   hlight.position.set(0, 10, -50);
   scene.add(hlight);
-
+  // Shadow
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+  directionalLight.position.x += 20;
+  directionalLight.position.y += 20;
+  directionalLight.position.z += 20;
+  directionalLight.castingShadow = true;
+  scene.add(directionalLight);
   // Clock
   clock = new THREE.Clock();
 
@@ -221,6 +229,27 @@ function init() {
 
   renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.shadowMap.enabled = true;
+
+  starGeo = new THREE.BufferGeometry();
+  for (let i = 0; i < 6000; i++) {
+    let star = new THREE.Vector3(
+      Math.random() * 600 - 300,
+      Math.random() * 600 - 300,
+      Math.random() * 600 - 300
+    );
+    // starGeo.vertices.push(star);
+  }
+  // let sprite = new THREE.TextureLoader().load("./asstes/star.png")
+  // let starMaterial = new THREE.PointsMaterial({
+  //   color: 0xaaaaaa,
+  //   size: 0.7,
+  //   map:sprite
+  // })
+
+  // stars = new THREE.Points(starGeo,starMaterial);
+  // scene.add(stars);
+  // animate();
 
   window.addEventListener("resize", () => {
     // Update sizes
@@ -238,7 +267,7 @@ function init() {
 
   // Controls
   controls = new OrbitControls(camera, canvas);
-  controls.enableDamping = true;
+  controls.addEventListener("change", renderer);
 
   // Grass
   const texture = new THREE.TextureLoader().load("assets/grass.jpeg");
@@ -246,7 +275,7 @@ function init() {
   // immediately use the texture for material creation
   const material = new THREE.MeshBasicMaterial({ map: texture });
   // Mesh
-  const geometry = new THREE.PlaneGeometry(30, 30);
+  const geometry = new THREE.PlaneGeometry(35, 35);
   const plane = new THREE.Mesh(geometry, material);
   scene.add(plane);
   plane.rotation.x = Math.PI / 2;
@@ -255,12 +284,23 @@ function init() {
 
   //Create the trees
   placeTrees(scene);
+  // cerca
+  const cerca = new GLTFLoader();
+  cerca.load("./assets/cerca/cerca.gltf", function (some) {
+    scene.add(some.scene);
+  });
+
+  // barn
+  // https://sketchfab.com/3d-models/farm-barn-b930b48e99934f698c52b92f4ec1e51a
+  const barn = new GLTFLoader();
+  barn.load("./assets/barn/barn.gltf", function (mybarn) {
+    scene.add(mybarn.scene);
+  });
 }
 
 // Animate
 function animate() {
   requestAnimationFrame(animate);
-
   var delta = clock.getDelta();
 
   if (mixer) mixer.update(delta);
@@ -272,7 +312,7 @@ function animate() {
   }
 }
 
-function createTree(){
+function createTree() {
   // Trunk texture
   const texture = new THREE.TextureLoader().load("assets/trunk.jpeg");
   const materialT = new THREE.MeshBasicMaterial({ map: texture });
@@ -281,40 +321,30 @@ function createTree(){
   const texture2 = new THREE.TextureLoader().load("assets/leaves.jpeg");
   const materialL = new THREE.MeshBasicMaterial({ map: texture2 });
 
-  const group = new THREE.Group()
-  const level1 = new THREE.Mesh(
-    new THREE.ConeGeometry(3,3),
-    materialL
-  )
-  level1.position.y = 7.5
-  group.add(level1)
-  const level2 = new THREE.Mesh(
-      new THREE.ConeGeometry(3.5,3),
-      materialL  )
-  level2.position.y = 5.5
-  group.add(level2)
-  const level3 = new THREE.Mesh(
-      new THREE.ConeGeometry(4.5,3),
-      materialL  )
-  level3.position.y = 3.5
-  group.add(level3)
-  const trunk = new THREE.Mesh(
-      new THREE.CylinderGeometry(1,1,3),
-      materialT
-  )
-  trunk.position.y = 1.5
-  group.add(trunk)
+  const group = new THREE.Group();
+  const level1 = new THREE.Mesh(new THREE.ConeGeometry(3, 3), materialL);
+  level1.position.y = 7.5;
+  group.add(level1);
+  const level2 = new THREE.Mesh(new THREE.ConeGeometry(3.5, 3), materialL);
+  level2.position.y = 5.5;
+  group.add(level2);
+  const level3 = new THREE.Mesh(new THREE.ConeGeometry(4.5, 3), materialL);
+  level3.position.y = 3.5;
+  group.add(level3);
+  const trunk = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 3), materialT);
+  trunk.position.y = 1.5;
+  group.add(trunk);
   return group;
 }
 
-function placeTrees (scene) {
+function placeTrees(scene) {
   let pos = -10;
-  for (let i = 0; i < 3; i++, pos+=10){
-    const newTree=createTree();
+  for (let i = 0; i < 3; i++, pos += 10) {
+    const newTree = createTree();
     scene.add(newTree);
     newTree.position.x = 8;
     newTree.position.z = pos;
-    const newTree2=createTree();
+    const newTree2 = createTree();
     scene.add(newTree2);
     newTree2.position.x = -8;
     newTree2.position.z = pos;
@@ -326,7 +356,7 @@ function createPathStrings(filename) {
   const baseFilename = basePath + filename;
   const fileType = ".bmp";
   const sides = ["ft", "bk", "up", "dn", "rt", "lf"];
-  const pathStings = sides.map(side => {
+  const pathStings = sides.map((side) => {
     return baseFilename + "_" + side + fileType;
   });
   return pathStings;
@@ -334,7 +364,7 @@ function createPathStrings(filename) {
 
 function createMaterialArray(filename) {
   const skyboxImagepaths = createPathStrings(filename);
-  const materialArray = skyboxImagepaths.map(image => {
+  const materialArray = skyboxImagepaths.map((image) => {
     let texture = new THREE.TextureLoader().load(image);
 
     return new THREE.MeshBasicMaterial({ map: texture, side: THREE.BackSide });
