@@ -6,13 +6,7 @@ Luis Yerik Arámbula Barrera A00825080
 Alejandro Cedillo Gámez A00824742
 José Ernesto García Torales A01365919
 
-Para correr localmente instala las dependencias:
-
-`npm i`
-
-Inicia tu servidor local con
-
-`npm run dev`
+Para correr localmente clona el repositorio y utiliza la extensión __live server__ de VS code
 
 
 ## Descripción del proyecto
