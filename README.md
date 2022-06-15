@@ -2,8 +2,8 @@
 
 ### Desarrolladores ###
 
-Luis Yerik Arámbula Barrera A00825080
-Alejandro Cedillo Gámez A00824742
+Luis Yerik Arámbula Barrera A00825080 \
+Alejandro Cedillo Gámez A00824742 \
 José Ernesto García Torales A01365919
 
 Para correr localmente clona el repositorio y utiliza la extensión __live server__ de VS code
@@ -26,8 +26,9 @@ Para cambiar el zoom utiliza la rueda del mouse.
 
 Puedes ver el proyecto en vivo [aquí](https://luyer74.github.io/Proyecto_Graficas/)
 
-
-
+### Herramientas ###
+Creacion de modelos con ayuda de
+[Vectary](https://www.vectary.com)
 ### Modelos ###
 Pato obtenido de [link](https://sketchfab.com/3d-models/duck-b78442de2bc542ef9393608c40664aa1)
 
