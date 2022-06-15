@@ -16,10 +16,14 @@ Animación de un pato caminando, basado en el popular gif
 ![pato](https://c.tenor.com/A-dUfi3bkMoAAAAi/pato-juan.gif)
 
 Para controlar el pato utiliza 
-`wasd`
-Para mover la cámara utiliza clic izquierdo
-Para cambiar de posición la cámara utiliza clic derecho
-Para cambiar el zoom utiliza la rueda del mouse
+`wasd`. 
+
+Para mover la cámara utiliza clic izquierdo. 
+
+Para cambiar de posición la cámara utiliza clic derecho.  
+
+Para cambiar el zoom utiliza la rueda del mouse. 
+
 
 
 ### Modelos ###
