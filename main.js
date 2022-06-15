@@ -186,16 +186,15 @@ function init() {
   scene.add(camera);
 
   // lights
-  // const hlight = new THREE.AmbientLight(0xffffff, 2);
-  // hlight.position.set(0, 10, -50);
-  // scene.add(hlight);
+  const hlight = new THREE.AmbientLight (0x404040, 3);
+  hlight.position.set(0,10,-50);
+  scene.add(hlight);
   // Shadow
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
   directionalLight.position.set( 20, 30, 20 );
   directionalLight.castShadow = true;
-  directionalLight.shadow.camera.near = 0.5;
-  directionalLight.shadow.camera.far = 100;
   scene.add(directionalLight);
+  directionalLight.shadow.camera.scale.set(3, 3, 3);
   const helper = new THREE.CameraHelper(directionalLight.shadow.camera);
   scene.add(helper);
   // Clock
@@ -308,6 +307,11 @@ function init() {
   // https://sketchfab.com/3d-models/farm-barn-b930b48e99934f698c52b92f4ec1e51a
   const barn = new GLTFLoader();
   barn.load("./assets/barn/barn.gltf", function (mybarn) {
+    mybarn.scene.traverse(function (child) {
+      if (child.isMesh) {
+        child.castShadow = true;
+      }
+    });
     scene.add(mybarn.scene);
   });
 }
