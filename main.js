@@ -2,6 +2,7 @@ import "./style.css";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { Vector3 } from "three";
 
 let starGeo, stars;
 
@@ -170,7 +171,7 @@ function init() {
   // scene.background = new THREE.Color(0xa8def0);
 
   const materialArray = createMaterialArray("Daylight");
-  const skyboxGeo = new THREE.BoxGeometry(50, 50, 50);
+  const skyboxGeo = new THREE.BoxGeometry(35, 35, 35);
   const skybox = new THREE.Mesh(skyboxGeo, materialArray);
   scene.add(skybox);
 
@@ -287,6 +288,10 @@ function init() {
   // cerca
   const cerca = new GLTFLoader();
   cerca.load("./assets/cerca/cerca.gltf", function (some) {
+    some.scene.scale.set(1.15, 1.15, 1.15);
+    some.scene.position.x = 3;
+    some.scene.position.z = 2;
+
     scene.add(some.scene);
   });
 
@@ -338,8 +343,8 @@ function createTree() {
 }
 
 function placeTrees(scene) {
-  let pos = -10;
-  for (let i = 0; i < 3; i++, pos += 10) {
+  let pos = 0;
+  for (let i = 0; i < 2; i++, pos += 10) {
     const newTree = createTree();
     scene.add(newTree);
     newTree.position.x = 8;
