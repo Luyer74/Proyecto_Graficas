@@ -17,6 +17,9 @@ Animación de un pato caminando, basado en el popular gif
 
 Para controlar el pato utiliza 
 `wasd`
+Para mover la cámara utiliza clic izquierdo
+Para cambiar de posición la cámara utiliza clic derecho
+Para cambiar el zoom utiliza la rueda del mouse
 
 
 ### Modelos ###
