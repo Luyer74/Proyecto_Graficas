@@ -1,6 +1,6 @@
 # Proyecto Gráficas Computacionales
 
-###Desarrolladores###
+### Desarrolladores ###
 
 Luis Yerik Arámbula Barrera A00825080
 Alejandro Cedillo Gámez A00824742
