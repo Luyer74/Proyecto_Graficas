@@ -186,22 +186,29 @@ function init() {
   scene.add(camera);
 
   // lights
-  const hlight = new THREE.AmbientLight(0xffffff, 2);
-  hlight.position.set(0, 10, -50);
-  scene.add(hlight);
+  // const hlight = new THREE.AmbientLight(0xffffff, 2);
+  // hlight.position.set(0, 10, -50);
+  // scene.add(hlight);
   // Shadow
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-  directionalLight.position.x += 20;
-  directionalLight.position.y += 20;
-  directionalLight.position.z += 20;
-  directionalLight.castingShadow = true;
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+  directionalLight.position.set( 20, 30, 20 );
+  directionalLight.castShadow = true;
+  directionalLight.shadow.camera.near = 0.5;
+  directionalLight.shadow.camera.far = 100;
   scene.add(directionalLight);
+  const helper = new THREE.CameraHelper(directionalLight.shadow.camera);
+  scene.add(helper);
   // Clock
   clock = new THREE.Clock();
 
   // Loader
   var loader = new GLTFLoader();
   loader.load("./assets/duck/scene.gltf", function (gltf) {
+    gltf.scene.traverse(function (child) {
+      if (child.isMesh) {
+        child.castShadow = true;
+      }
+    });
     const params = {
       target: gltf.scene,
       camera: camera,
@@ -231,6 +238,7 @@ function init() {
   renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   starGeo = new THREE.BufferGeometry();
   for (let i = 0; i < 6000; i++) {
@@ -276,8 +284,9 @@ function init() {
   // immediately use the texture for material creation
   const material = new THREE.MeshBasicMaterial({ map: texture });
   // Mesh
-  const geometry = new THREE.PlaneGeometry(35, 35);
-  const plane = new THREE.Mesh(geometry, material);
+  const planeGeometry = new THREE.PlaneGeometry(35, 35)
+  const plane = new THREE.Mesh(planeGeometry, new THREE.MeshStandardMaterial({ map: texture }))
+  plane.receiveShadow = true;
   scene.add(plane);
   plane.rotation.x = Math.PI / 2;
   plane.rotation.y = Math.PI;
@@ -320,24 +329,28 @@ function animate() {
 function createTree() {
   // Trunk texture
   const texture = new THREE.TextureLoader().load("assets/trunk.jpeg");
-  const materialT = new THREE.MeshBasicMaterial({ map: texture });
+  const materialT = new THREE.MeshStandardMaterial({ map: texture });
 
   // Leaves texture
   const texture2 = new THREE.TextureLoader().load("assets/leaves.jpeg");
-  const materialL = new THREE.MeshBasicMaterial({ map: texture2 });
+  const materialL = new THREE.MeshStandardMaterial({ map: texture2 });
 
   const group = new THREE.Group();
   const level1 = new THREE.Mesh(new THREE.ConeGeometry(3, 3), materialL);
   level1.position.y = 7.5;
+  level1.castShadow = true;
   group.add(level1);
   const level2 = new THREE.Mesh(new THREE.ConeGeometry(3.5, 3), materialL);
   level2.position.y = 5.5;
+  level2.castShadow = true;
   group.add(level2);
   const level3 = new THREE.Mesh(new THREE.ConeGeometry(4.5, 3), materialL);
   level3.position.y = 3.5;
+  level3.castShadow = true;
   group.add(level3);
   const trunk = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 3), materialT);
   trunk.position.y = 1.5;
+  trunk.castShadow = true;
   group.add(trunk);
   return group;
 }
@@ -348,7 +361,7 @@ function placeTrees(scene) {
     const newTree = createTree();
     scene.add(newTree);
     newTree.position.x = 8;
-    newTree.position.z = pos;
+    newTree.position.z = pos; 
     const newTree2 = createTree();
     scene.add(newTree2);
     newTree2.position.x = -8;
