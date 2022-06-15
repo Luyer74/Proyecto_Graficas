@@ -191,7 +191,7 @@ function init() {
   scene.add(hlight);
   // Shadow
   const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-  directionalLight.position.set( 20, 30, 20 );
+  directionalLight.position.set( -10, 30, -30 );
   directionalLight.castShadow = true;
   scene.add(directionalLight);
   directionalLight.shadow.camera.scale.set(3, 3, 3);
