@@ -186,12 +186,12 @@ function init() {
   scene.add(camera);
 
   // lights
-  const hlight = new THREE.AmbientLight (0x404040, 3);
-  hlight.position.set(0,10,-50);
+  const hlight = new THREE.AmbientLight(0x404040, 3);
+  hlight.position.set(0, 10, -50);
   scene.add(hlight);
   // Shadow
   const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-  directionalLight.position.set( -10, 30, -30 );
+  directionalLight.position.set(-10, 30, -30);
   directionalLight.castShadow = true;
   scene.add(directionalLight);
   directionalLight.shadow.camera.scale.set(3, 3, 3);
@@ -278,13 +278,16 @@ function init() {
   controls.addEventListener("change", renderer);
 
   // Grass
-  const texture = new THREE.TextureLoader().load("assets/grass.jpeg");
+  const texture = new THREE.TextureLoader().load("assets/grass2.jpeg");
 
   // immediately use the texture for material creation
   const material = new THREE.MeshBasicMaterial({ map: texture });
   // Mesh
-  const planeGeometry = new THREE.PlaneGeometry(35, 35)
-  const plane = new THREE.Mesh(planeGeometry, new THREE.MeshStandardMaterial({ map: texture }))
+  const planeGeometry = new THREE.PlaneGeometry(35, 35);
+  const plane = new THREE.Mesh(
+    planeGeometry,
+    new THREE.MeshStandardMaterial({ map: texture })
+  );
   plane.receiveShadow = true;
   scene.add(plane);
   plane.rotation.x = Math.PI / 2;
@@ -365,7 +368,7 @@ function placeTrees(scene) {
     const newTree = createTree();
     scene.add(newTree);
     newTree.position.x = 8;
-    newTree.position.z = pos; 
+    newTree.position.z = pos;
     const newTree2 = createTree();
     scene.add(newTree2);
     newTree2.position.x = -8;
