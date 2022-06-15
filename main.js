@@ -251,7 +251,6 @@ function init() {
 
   // Controls
   controls = new OrbitControls(camera, canvas);
-  controls.addEventListener("change", renderer);
 
   // Grass
   const texture = new THREE.TextureLoader().load("assets/grass2.jpeg");
