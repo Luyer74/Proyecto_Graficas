@@ -1,12 +1,8 @@
 # Proyecto Gráficas Computacionales
 
-Para correr localmente inicia un proyecto de Vite con:
+Para correr localmente instala las dependencias:
 
-`npm init vite`
-
-Después, instala Three.js
-
-`npm install three`
+`npm i`
 
 Inicia tu servidor local con
 
