@@ -4,8 +4,6 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { Vector3 } from "three";
 
-let starGeo, stars;
-
 //controller class
 class BasicCharacterControls {
   constructor(params) {
@@ -168,7 +166,6 @@ window.addEventListener("keyup", function (event) {
 function init() {
   // Base scene
   scene = new THREE.Scene();
-  // scene.background = new THREE.Color(0xa8def0);
 
   const materialArray = createMaterialArray("Daylight");
   const skyboxGeo = new THREE.BoxGeometry(35, 35, 35);
@@ -195,8 +192,9 @@ function init() {
   directionalLight.castShadow = true;
   scene.add(directionalLight);
   directionalLight.shadow.camera.scale.set(3, 3, 3);
-  const helper = new THREE.CameraHelper(directionalLight.shadow.camera);
-  scene.add(helper);
+  // Helper light
+  // const helper = new THREE.CameraHelper(directionalLight.shadow.camera);
+  // scene.add(helper);
   // Clock
   clock = new THREE.Clock();
 
@@ -238,26 +236,6 @@ function init() {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-  starGeo = new THREE.BufferGeometry();
-  for (let i = 0; i < 6000; i++) {
-    let star = new THREE.Vector3(
-      Math.random() * 600 - 300,
-      Math.random() * 600 - 300,
-      Math.random() * 600 - 300
-    );
-    // starGeo.vertices.push(star);
-  }
-  // let sprite = new THREE.TextureLoader().load("./asstes/star.png")
-  // let starMaterial = new THREE.PointsMaterial({
-  //   color: 0xaaaaaa,
-  //   size: 0.7,
-  //   map:sprite
-  // })
-
-  // stars = new THREE.Points(starGeo,starMaterial);
-  // scene.add(stars);
-  // animate();
 
   window.addEventListener("resize", () => {
     // Update sizes
